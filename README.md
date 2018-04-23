@@ -42,5 +42,8 @@ Create a new writable stream which will select a sub-stream to pipe all of the d
    * `selector`: (`function (chunk, encoding, callback`) The method to use to choose which stream to use. You can either return the stream directly or use the callback. Note that if you return nothing, you *must* use the callback else the stream will infinitely hang. The data will be buffered until the decision is made.
    * `minBuffer`: (*optional* `Integer`) The number of bytes to read in before bothering to call the selector funciton. This is useful if you need a larger header of your data before a decision can be made. The data will be buffered until the decision is made.
 
+#### `new TransformSelector([options])` => `TransformSelector`
+If you'd like to use a transform stream instead, this is available in `stream-selector/transform`. It takes in all the same options as `StreamSelector`.
+
 # License
 MIT
