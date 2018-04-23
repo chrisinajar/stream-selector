@@ -19,6 +19,7 @@
     "tape": "^4.9.0"
   },
   "dependencies": {
-    "inherits": "^2.0.3"
+    "inherits": "^2.0.3",
+    "through2": "^2.0.3"
   }
 }

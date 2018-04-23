@@ -1,8 +1,7 @@
 const test = require('tape');
 const streamBuffers = require('stream-buffers');
-const PassThrough = require('stream').PassThrough;
+const PassThrough = require('through2');
 const StreamSelector = require('./');
-const TransformSelector = require('./transform');
 
 test('basic usage w/o callback', function (t) {
   var selector = new StreamSelector(selectStream);
@@ -83,7 +82,7 @@ test('minBuffer enforcement', function (t) {
 // TRANSFORM STREAMS
 
 test('transform basic usage w/o callback', function (t) {
-  var selector = new TransformSelector(selectStream);
+  var selector = new StreamSelector(selectStream);
   var writable = new streamBuffers.WritableStreamBuffer();
   selector.pipe(writable);
 
@@ -108,7 +107,7 @@ test('transform basic usage w/o callback', function (t) {
 });
 
 test('transform basic usage w/ callback', function (t) {
-  var selector = new TransformSelector(selectStream);
+  var selector = new StreamSelector(selectStream);
   var writable = new streamBuffers.WritableStreamBuffer();
   selector.pipe(writable);
 
@@ -136,7 +135,7 @@ test('transform basic usage w/ callback', function (t) {
 });
 
 test('transform minBuffer enforcement', function (t) {
-  var selector = new TransformSelector({
+  var selector = new StreamSelector({
     minBuffer: 10,
     selector: selectStream
   });
