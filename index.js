@@ -17,12 +17,21 @@ function StreamSelector (options) {
     };
   }
 
-  return through2(transform);
+  return through2(transform, flush);
+
+  function flush (cb) {
+    if (destinationStream.flush) {
+      destinationStream.flush(cb);
+    } else {
+      destinationStream.end();
+      cb();
+    }
+  }
 
   function transform (chunk, encoding, done) {
     if (destinationStream) {
-      done();
-      return destinationStream.write(chunk, encoding);
+      destinationStream.write(chunk, encoding, done);
+      return;
     }
     // haven't found a good destination stream yet, keep trying...
     // store data we're buffering so we can make sure to send it all when we find a stream
@@ -70,13 +79,9 @@ function StreamSelector (options) {
       return;
     }
     destinationStream = stream;
-    if (destinationStream.readable) {
-      destinationStream.pipe(through2((chunk, encoding, done) => {
-        self.push(chunk);
-        done();
-      }));
-    }
+
     if (curBuffer) {
+      destinationStream.on('data', self.push.bind(self));
       destinationStream.write(curBuffer, encoding);
       curBuffer = null;
     }
